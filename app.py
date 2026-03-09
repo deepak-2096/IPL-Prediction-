@@ -1,17 +1,42 @@
 import pandas as pd
 import numpy as np
+import requests  # <-- NEW: This is the tool that talks to the internet
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import streamlit as st
 
 """Data Loading, Model Training and Streamlit UI
 
-This app predicts a continuous `outcome_score` (higher is better)
-from powerplay features using linear regression and displays
-R² and RMSE on a held-out test set.
+This app predicts a continuous outcome_score (higher is better)
+from powerplay features using linear regression.
 """
 
-df = pd.read_csv('ipl_powerplay_finalscore_dataset_1000.csv')
+# =============================================================================
+# 1. LIVE DATA FETCHING
+# =============================================================================
+
+# This is a placeholder URL. You will replace this with a real Cricket API link later!
+API_URL = "https://api.example-sports-data.com/latest_ipl_powerplays"
+
+try:
+    # 1. Ask the internet for the data
+    response = requests.get(API_URL)
+    
+    # 2. Read the response as a dictionary (JSON format)
+    live_data = response.json()
+    
+    # 3. Turn it into the exact same Pandas table you had before!
+    df = pd.DataFrame(live_data)
+
+except:
+    # If the internet is down or the URL is fake, we show a friendly message and stop.
+    st.error("Could not connect to the live data source. Please check your API URL.")
+    st.stop()
+
+
+# =============================================================================
+# 2. MODEL TRAINING (Your exact operations)
+# =============================================================================
 
 X = df[['powerplay_score', 'powerplay_wickets']]
 y = df['final_score']
@@ -22,7 +47,9 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 
-# ---------------- STREAMLIT UI ---------------- #
+# =============================================================================
+# 3. STREAMLIT UI (Your exact code)
+# =============================================================================
 st.title("🏏 IPL Powerplay Outcome Score Predictor (Linear Regression)")
 st.write("Predict a continuous outcome score from powerplay performance")
 st.markdown("---")
