@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
 import streamlit as st
 
 """Data Loading, Model Training and Streamlit UI
@@ -31,10 +30,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = LinearRegression()
 model.fit(X_train, y_train)
 
-# Evaluate on test set
-y_test_pred = model.predict(X_test)
-r2 = r2_score(y_test, y_test_pred)
-rmse = mean_squared_error(y_test, y_test_pred, squared=False)
 
 # ---------------- STREAMLIT UI ---------------- #
 st.title("🏏 IPL Powerplay Outcome Score Predictor (Linear Regression)")
@@ -62,8 +57,3 @@ if st.button("Predict Score"):
     pred = model.predict(X_input)[0]
 
     st.metric(label="Predicted Outcome Score", value=f"{pred:.2f}")
-    st.write(f"**Model R²:** {r2:.3f}  —  **RMSE:** {rmse:.3f}")
-    st.write("**Model intercept:** {:.3f}".format(float(model.intercept_)))
-    st.write("**Coefficients:** powerplay_score = {:.3f}, powerplay_wickets = {:.3f}".format(
-        float(model.coef_[0]), float(model.coef_[1])
-    ))
