@@ -11,19 +11,10 @@ from powerplay features using linear regression and displays
 R² and RMSE on a held-out test set.
 """
 
-np.random.seed(42)
-df = pd.DataFrame({
-    'powerplay_score': np.random.randint(20, 120, 1000),
-    'powerplay_wickets': np.random.randint(0, 6, 1000),
-})
-
-# Create a continuous outcome correlated with the features
-df['outcome_score'] = (0.6 * df['powerplay_score'] - 5 * df['powerplay_wickets']
-                       + np.random.normal(0, 10, len(df)))
-df['outcome_score'] = df['outcome_score'].clip(lower=0)
+df = pd.read_csv('ipl_powerplay_finalscore_dataset_1000.csv')
 
 X = df[['powerplay_score', 'powerplay_wickets']]
-y = df['outcome_score']
+y = df['final_score']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
